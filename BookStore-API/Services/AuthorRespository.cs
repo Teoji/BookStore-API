@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace BookStore_API.Services
 {
-    public class AuthorRespositoy : IAuthorRepository
+    public class AuthorRespository : IAuthorRepository
     {
         private  ApplicationDbContext _db  { get; set; }
 
-        public AuthorRespositoy(ApplicationDbContext db)
+        public AuthorRespository(ApplicationDbContext db)
         {
             _db = db;
         }
