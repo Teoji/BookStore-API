@@ -2,6 +2,7 @@
 using BookStore_API.Contracts;
 using BookStore_API.Data;
 using BookStore_API.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -36,6 +37,7 @@ namespace BookStore_API.Controllers
         /// </summary>
         /// <returns>List of Authors</returns>
         [HttpGet]
+        [Authorize(Roles="Customer")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAuthors()
@@ -61,6 +63,7 @@ namespace BookStore_API.Controllers
         /// <param> name="id"</param>
         /// <returns>an Author</returns>
         [HttpGet("{id}")]
+        [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -92,10 +95,12 @@ namespace BookStore_API.Controllers
         /// <param> name="AuthorDTO"></param>
         /// <returns></returns>
         /// 
+        
+        [HttpPost]
+        [Authorize (Roles="Administrator")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [HttpPost]
         public async Task<IActionResult> Create([FromBody] AuthorCreateDTO authorDTO)
         {
             try
@@ -137,6 +142,7 @@ namespace BookStore_API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> Update(int Id, [FromBody] AuthorUpdateDTO authorDTO)
         {
             try
@@ -178,6 +184,7 @@ namespace BookStore_API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> Delete(int Id)
         {
             try
