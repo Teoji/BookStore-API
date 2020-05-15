@@ -10,7 +10,7 @@ namespace BookStore_API.DTOs
     {
         [Required]
         [EmailAddress]
-        public string EMailAddress { get; set; }
+        public string EmailAddress { get; set; }
         
         [Required]
         [DataType(DataType.Password)]

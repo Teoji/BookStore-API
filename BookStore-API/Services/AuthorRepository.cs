@@ -3,19 +3,19 @@ using BookStore_API.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace BookStore_API.Services
 {
-    public class AuthorRespository : IAuthorRepository
+    public class AuthorRepository : IAuthorRepository
     {
-        private  ApplicationDbContext _db  { get; set; }
+        private readonly ApplicationDbContext _db;
 
-        public AuthorRespository(ApplicationDbContext db)
+        public AuthorRepository(ApplicationDbContext db)
         {
             _db = db;
         }
-
         public async Task<bool> Create(Author entity)
         {
             await _db.Authors.AddAsync(entity);
@@ -40,6 +40,11 @@ namespace BookStore_API.Services
             return author;
         }
 
+        public async Task<bool> isExists(int id)
+        {
+            return await _db.Authors.AnyAsync(q => q.Id == id);
+        }
+
         public async Task<bool> Save()
         {
             var changes = await _db.SaveChangesAsync();
@@ -48,13 +53,8 @@ namespace BookStore_API.Services
 
         public async Task<bool> Update(Author entity)
         {
-             _db.Authors.Update(entity);
+            _db.Authors.Update(entity);
             return await Save();
-        }
-
-        public async Task<bool> isExists(int Id)
-        {
-            return await _db.Authors.AnyAsync(a =>a.Id == Id);
         }
     }
 }

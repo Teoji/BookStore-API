@@ -28,7 +28,7 @@ namespace BookStore_API.Services
             return await Save();
         }
 
-        public async Task<bool> Exists(int Id)
+        public async Task<bool> isExists(int Id)
         {
             return await _db.Books.AnyAsync(a => a.Id == Id);
         }

@@ -145,7 +145,7 @@ namespace BookStore_API.Controllers
                     _logger.LogWarn($"{location} : Emtpy request was submitted");
                     return BadRequest();
                 }
-                var Exists = await _bookRepository.Exists(Id);
+                var Exists = await _bookRepository.isExists(Id);
                 if (!Exists)
                 {
                     return NotFound();

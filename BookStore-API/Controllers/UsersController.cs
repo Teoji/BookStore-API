@@ -52,7 +52,7 @@ namespace BookStore_API.Controllers
             var location = GetControllerActionName();
             try
             {
-                var username = userDTO.EMailAddress;
+                var username = userDTO.EmailAddress;
                 var password = userDTO.Password;
                 _logger.LogInfo($"{location} : {username}/{password} Attemped Register");
                 var user = new IdentityUser
@@ -90,31 +90,34 @@ namespace BookStore_API.Controllers
         [Route("Login")]
         public async Task<IActionResult> Login([FromBody] UserDTO userDTO)
         {
-            var username = userDTO.EMailAddress;
-            var password = userDTO.Password;
             var location = GetControllerActionName();
-            _logger.LogInfo($"{location} : {username}({password} Attemped login");
             try
             {
+                var username = userDTO.EmailAddress;
+                var password = userDTO.Password;
+                var user = await _userManager.FindByEmailAsync(userDTO.EmailAddress);
+                var haspassword = await _userManager.CheckPasswordAsync(user, userDTO.Password);
+                _logger.LogInfo($"{location}: Login Attempt from user {username} ");
+                var result = await _signInManager.PasswordSignInAsync(user.UserName, password, false, false);
 
-                var result = await _signInManager.PasswordSignInAsync(username, password, false, false);
                 if (result.Succeeded)
                 {
-                    var  benutzer = await _userManager.FindByNameAsync(username);
-                    _logger.LogInfo($"{location} : {username}/{password} successfull login");
-                    var tokenstring = await GenerateJWT(benutzer);
-                    return Ok(new { token =tokenstring });
+                    _logger.LogInfo($"{location}: {username} Successfully Authenticated");
+                    //var user = await _userManager.FindByEmailAsync(username);
+                    _logger.LogInfo($"{location}: Generating Token");
+                    var tokenString = await GenerateJWT(user);
+                    return Ok(new { token = tokenString });
                 }
-                _logger.LogInfo($"{location} : {username}/{password} unknown user");
+                _logger.LogInfo($"{location}: {username} Not Authenticated");
                 return Unauthorized(userDTO);
             }
             catch (Exception e)
             {
-                return InternalError($"{location} : {e.Message} - {e.InnerException}");
+                return InternalError($"{location}: {e.Message} - {e.InnerException}");
             }
         }
 
-     
+
 
         private async Task<string> GenerateJWT(IdentityUser user)
         {

@@ -16,7 +16,7 @@ namespace BookStore_API.Contracts
         
         Task<bool> Save();
 
-        Task<bool> Exists(int Id);
+        Task<bool> isExists(int Id);
 
 
     }
